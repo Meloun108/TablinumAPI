@@ -61,6 +61,44 @@ namespace tablinumAPI.Controllers
             };
             return Json(response);
         }
+
+        [HttpPost("/register")]
+        public IActionResult Register(User user)
+        {
+            User account = new User();
+            /*account = _accountService.Get(login);
+
+            if (account == null)
+            {
+                User createUser = new User();
+                createUser.UserLogin = login;
+                createUser.Name = name;
+                createUser.Group = group;
+                createUser.Password = password;
+                account = _accountService.Create(createUser);
+                var identity = GetIdentity(account);
+                if (identity == null)
+                {
+                    return BadRequest(new { errorText = "Невозможно создать пользователя!" });
+                }
+                var now = DateTime.UtcNow;
+                var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    notBefore: now,
+                    claims: identity.Claims,
+                    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+                var response = new
+                {
+                    access_token = encodedJwt,
+                    username = identity.Name
+                };
+                return Json(response);
+            }*/
+            return BadRequest(new { errorText = "Такой пользователь уже существует!" });
+        }
  
         private ClaimsIdentity GetIdentity(User account)
         {
