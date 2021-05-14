@@ -5,18 +5,14 @@ using Newtonsoft.Json;
 
 namespace tablinumAPI.Models
 {
-    public class User
+    public class Role
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("Login")]
-        [JsonProperty("Login")]
-        public string UserLogin { get; set; }
-        public string Password { get; set; }
-        public Group Group { get; set; }
+        [BsonElement("RoleName")]
+        [JsonProperty("RoleName")]
         public string Name { get; set; }
-        public Role Role { get; set; }
     }
 }

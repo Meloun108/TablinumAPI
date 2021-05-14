@@ -11,5 +11,8 @@ namespace tablinumAPI.Models
 
         public DbSet<Document> Documents { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Initio> Initio { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

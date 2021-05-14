@@ -24,17 +24,15 @@ namespace tablinumAPI.Controllers
         };*/
  
         [HttpPost("/token")]
-        public IActionResult Token(string username, string password)
+        public IActionResult Token([FromBody]User user)
         {
             User account = new User();
-            account = _accountService.Get(username);
-            //var account = _accountService.Get(username);
-
+            account = _accountService.Get(user.UserLogin);
             if (account == null)
             {
                 return BadRequest(new { errorText = "Нет такого пользователя!" });
             }
-            if (account.Password != password) {
+            if (account.Password != user.Password) {
                 return BadRequest(new { errorText = "Invalid username or password." });
             }
             var identity = GetIdentity(account);
@@ -42,7 +40,6 @@ namespace tablinumAPI.Controllers
             {
                 return BadRequest(new { errorText = "Invalid username or password." });
             }
- 
             var now = DateTime.UtcNow;
             // создаем JWT-токен
             var jwt = new JwtSecurityToken(
@@ -53,7 +50,6 @@ namespace tablinumAPI.Controllers
                     expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
- 
             var response = new
             {
                 access_token = encodedJwt,
@@ -63,23 +59,22 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpPost("/register")]
-        public IActionResult Register(User user)
-        {
+        public IActionResult Register([FromBody]User user)
+        {
             User account = new User();
-            /*account = _accountService.Get(login);
-
+            account = _accountService.Get(user.UserLogin);
             if (account == null)
             {
                 User createUser = new User();
-                createUser.UserLogin = login;
-                createUser.Name = name;
-                createUser.Group = group;
-                createUser.Password = password;
+                createUser.UserLogin = user.UserLogin;
+                createUser.Name = user.Name;
+                createUser.Group = user.Group;
+                createUser.Password = user.Password;
                 account = _accountService.Create(createUser);
                 var identity = GetIdentity(account);
                 if (identity == null)
                 {
-                    return BadRequest(new { errorText = "Невозможно создать пользователя!" });
+                    return BadRequest(new { errorText = "Пользователь создан без учетной записи!" });
                 }
                 var now = DateTime.UtcNow;
                 var jwt = new JwtSecurityToken(
@@ -96,27 +91,32 @@ namespace tablinumAPI.Controllers
                     username = identity.Name
                 };
                 return Json(response);
-            }*/
+            }
             return BadRequest(new { errorText = "Такой пользователь уже существует!" });
-        }
+        }
  
-        private ClaimsIdentity GetIdentity(User account)
-        {
-            if (account != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, account.UserLogin),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Name),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Group),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Role),
-                };
-                ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
-            }
-            return null;
-        }
-    }
+        private ClaimsIdentity GetIdentity(User account)
+        {
+            if (account != null)
+            {
+                if (account.Role == null) {
+                    return null;
+                }
+                else {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, account.UserLogin),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Name),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Group.GroupName),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Role.Name),
+                    };
+                    ClaimsIdentity claimsIdentity =
+                        new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                                           ClaimsIdentity.DefaultRoleClaimType);
+                    return claimsIdentity;
+                }
+            }
+            return null;
+        }
+    }
 }

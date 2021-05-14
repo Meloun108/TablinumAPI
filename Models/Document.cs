@@ -2,6 +2,7 @@ using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace tablinumAPI.Models
 {
@@ -24,8 +25,11 @@ namespace tablinumAPI.Models
         public DateTime NumberDepartmentDate { get; set; }
         public string NumberGroup { get; set; }
         public DateTime NumberGroupDate { get; set; }
+        //public List<DocumentGroup> GroupInfo { get; set; }
         public string From { get; set; }
+        //public Initio From { get; set; }
         public string Executor { get; set; }
+        //public User Executor { get; set; }
         public DateTime ExecutionDate { get; set; }
         public bool Status { get; set; }
         public string View { get; set; }
@@ -34,6 +38,7 @@ namespace tablinumAPI.Models
         public string Comment { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+        //public List<DateTime> Updated { get; set; }
     }
 }
 
