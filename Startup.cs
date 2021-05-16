@@ -21,21 +21,8 @@ namespace tablinumAPI
 
         public IConfiguration Configuration { get; }
 
-        /*public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<Context>(opt =>
-                                               opt.UseInMemoryDatabase("TablinumList"));
-            services.AddControllers();
-        }*/
-
         public void ConfigureServices(IServiceCollection services)
         {
-            /*services.AddCors(o => o.AddPolicy("LowCorsPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));*/
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -70,6 +57,9 @@ namespace tablinumAPI
 
             services.AddSingleton<DocumentService>();
             services.AddSingleton<AccountService>();
+            services.AddSingleton<GroupService>();
+            services.AddSingleton<RoleService>();
+            services.AddSingleton<InitioService>();
 
             services.AddControllers().AddNewtonsoftJson(options => options.UseMemberCasing());
         }
@@ -84,7 +74,6 @@ namespace tablinumAPI
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseCors();
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
@@ -92,10 +81,6 @@ namespace tablinumAPI
             {
                 endpoints.MapDefaultControllerRoute();
             });
-            /*app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });*/
         }
     }
 }

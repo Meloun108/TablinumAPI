@@ -23,13 +23,21 @@ namespace tablinumAPI.Models
         public DateTime NumberCenterDate { get; set; }
         public string NumberDepartment { get; set; }
         public DateTime NumberDepartmentDate { get; set; }
-        public string NumberGroup { get; set; }
-        public DateTime NumberGroupDate { get; set; }
-        //public List<DocumentGroup> GroupInfo { get; set; }
-        public string From { get; set; }
+        //public string NumberGroup { get; set; }
+        //public DateTime NumberGroupDate { get; set; }
+        public List<DocumentGroup> GroupInfo { get; set; }
+        //public string From { get; set; }
         //public Initio From { get; set; }
-        public string Executor { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("From")]
+        [JsonProperty("From")]
+        public string InitioId { get; set; }
+        //public string Executor { get; set; }
         //public User Executor { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("Executor")]
+        [JsonProperty("Executor")]
+        public string UserId { get; set; }
         public DateTime ExecutionDate { get; set; }
         public bool Status { get; set; }
         public string View { get; set; }
@@ -41,22 +49,3 @@ namespace tablinumAPI.Models
         //public List<DateTime> Updated { get; set; }
     }
 }
-
-
-/*namespace tablinumAPI.Models
-{
-    public class TablinumItem
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public bool IsComplete { get; set; }
-        public string Secret { get; set; }
-    }
-
-    public class TablinumItemDTO
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public bool IsComplete { get; set; }
-    }
-}*/

@@ -17,11 +17,6 @@ namespace tablinumAPI.Controllers
         {
             _accountService = accountService;
         }
-        /*private List<User> users = new List<User>
-        {
-            new User {Login="admin@gmail.com", Password="12345", Group="1T", Name="Administrator", Role = "admin" },
-            new User { Login="qwerty@gmail.com", Password="55555", Group="Secretary", Name="V", Role = "user" }
-        };*/
  
         [HttpPost("/token")]
         public IActionResult Token([FromBody]User user)
@@ -68,7 +63,8 @@ namespace tablinumAPI.Controllers
                 User createUser = new User();
                 createUser.UserLogin = user.UserLogin;
                 createUser.Name = user.Name;
-                createUser.Group = user.Group;
+                createUser.GroupId = user.GroupId;
+                createUser.RoleId = user.RoleId;
                 createUser.Password = user.Password;
                 account = _accountService.Create(createUser);
                 var identity = GetIdentity(account);
@@ -99,7 +95,7 @@ namespace tablinumAPI.Controllers
         {
             if (account != null)
             {
-                if (account.Role == null) {
+                if (account.RoleId == null) {
                     return null;
                 }
                 else {
@@ -107,8 +103,8 @@ namespace tablinumAPI.Controllers
                     {
                         new Claim(ClaimsIdentity.DefaultNameClaimType, account.UserLogin),
                         new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Name),
-                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Group.GroupName),
-                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.Role.Name),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.GroupId),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, account.RoleId),
                     };
                     ClaimsIdentity claimsIdentity =
                         new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

@@ -11,8 +11,8 @@ namespace tablinumAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("InitioName")]
-        [JsonProperty("InitioName")]
+        [BsonElement("Initio")]
+        [JsonProperty("Initio")]
         public string Executor { get; set; }
     }
 }

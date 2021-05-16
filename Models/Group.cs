@@ -17,7 +17,10 @@ namespace tablinumAPI.Models
     }
     public class DocumentGroup
     {
-        public Group Group { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("Group")]
+        [JsonProperty("Group")]
+        public string GroupId { get; set; }
         public string NumberGroup { get; set; }
         public DateTime NumberGroupDate { get; set; }
         public bool Location { get; set; }
