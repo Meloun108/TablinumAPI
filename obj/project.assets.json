@@ -7844,19 +7844,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/ao/.nuget/packages/": {}
+    "C:\\Users\\acer\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ao/Documents/Tablinum/TablinumAPI/tablinumAPI.csproj",
+      "projectUniqueName": "C:\\Users\\acer\\tablinumAPI\\tablinumAPI.csproj",
       "projectName": "tablinumAPI",
-      "projectPath": "/Users/ao/Documents/Tablinum/TablinumAPI/tablinumAPI.csproj",
-      "packagesPath": "/Users/ao/.nuget/packages/",
-      "outputPath": "/Users/ao/Documents/Tablinum/TablinumAPI/obj/",
+      "projectPath": "C:\\Users\\acer\\tablinumAPI\\tablinumAPI.csproj",
+      "packagesPath": "C:\\Users\\acer\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\acer\\tablinumAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/ao/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\acer\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -7937,7 +7937,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   },

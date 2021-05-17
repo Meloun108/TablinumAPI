@@ -39,6 +39,13 @@ namespace tablinumAPI.Controllers
             return document;
         }
 
+        [HttpGet("group/{group}")]
+        public ActionResult<List<Document>> GetGroup(string group)
+        {
+            var docs = _documentService.GetUserDoc(group);
+            return docs;
+        }
+
         [HttpPost]
         public ActionResult<Document> Create(Document document)
         {

@@ -2,6 +2,7 @@ using tablinumAPI.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson;
 
 namespace tablinumAPI.Services
 {
@@ -19,6 +20,21 @@ namespace tablinumAPI.Services
 
         public List<Document> Get() =>
             _documents.Find(document => true).ToList();
+
+        //public List<Document> GetUserDoc(string group)  =>
+        //    _documents.Find<Document>(document => document.GroupInfo.Group == group).ToList();
+
+        public List<Document> GetUserDoc(string group) {
+            var Filter = new BsonDocument("GroupInfo.Group", ObjectId.Parse(group));
+            //var Filter = Builders<BsonDocument>.Filter.Gt("GroupInfo._id", group);
+            var docs = _documents.Find(Filter).ToList();
+            //var docs = _documents.Aggregate()
+                // filter the ConnectingQuestions array to only include the element with QuestionNumber == 2
+            //    .Project<Document>("{ 'GroupInfo': { $filter: { input: '$GroupInfo', cond: { $eq: [ '$$this.Group', '" + group + "' ] } } } }")
+                // move the first (single!) item from "ConnectingQuestions" array to the document root level
+            //    .ToList();
+            return docs;
+        }
 
         public Document Get(string id) =>
             _documents.Find<Document>(document => document.Id == id).FirstOrDefault();

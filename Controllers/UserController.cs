@@ -37,6 +37,7 @@ namespace tablinumAPI.Controllers
         public ActionResult<User> GetLogin(string login)
         {
             var user = _userService.Get(login);
+            user.Password = null;
             if (user == null)
             {
                 return NotFound();
