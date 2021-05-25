@@ -15,6 +15,7 @@ namespace tablinumAPI.Models
         [JsonProperty("Login")]
         public string UserLogin { get; set; }
         public string Password { get; set; }
+        public string Salt { get; set; }
         //public Group Group { get; set; }
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonElement("Group")]

@@ -33,6 +33,8 @@
     ".NETCoreApp,Version=v5.0": {
       "tablinumAPI/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.7",
+          "Microsoft.AspNet.WebApi.Core": "5.2.7",
           "Microsoft.AspNet.WebApi.Cors": "5.2.7",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "5.0.5",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "5.0.5",

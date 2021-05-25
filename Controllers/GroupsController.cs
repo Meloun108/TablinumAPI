@@ -17,24 +17,26 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Group>> Get() =>
-            _groupService.Get();
+        public ActionResult<List<Group>> Get([FromHeader]string authorization) {
+            AccountController.ValidateToken(authorization);
+            var groups = _groupService.Get();
+            return groups;
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetGroup")]
-        public ActionResult<Group> Get(string id)
+        public ActionResult<Group> Get([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var group = _groupService.Get(id);
-
             if (group == null)
             {
                 return NotFound();
             }
-
             return group;
         }
 
         [HttpPost]
-        public ActionResult<Group> Create(Group group)
+        public ActionResult<Group> Create([FromHeader]string authorization, Group group)
         {
             _groupService.Create(group);
 
@@ -42,32 +44,28 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Group groupIn)
+        public IActionResult Update([FromHeader]string authorization, string id, Group groupIn)
         {
+            AccountController.ValidateToken(authorization);
             var group = _groupService.Get(id);
-
             if (group == null)
             {
                 return NotFound();
             }
-
             _groupService.Update(id, groupIn);
-
             return NoContent();
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var group = _groupService.Get(id);
-
             if (group == null)
             {
                 return NotFound();
             }
-
             _groupService.Remove(group.Id);
-
             return NoContent();
         }
     }

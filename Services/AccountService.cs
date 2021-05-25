@@ -2,6 +2,9 @@ using tablinumAPI.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System;
+using System.Text;
 
 namespace tablinumAPI.Services
 {
@@ -25,6 +28,20 @@ namespace tablinumAPI.Services
 
         public User Create(User user)
         {
+            using(var sha256 = SHA256.Create())  
+            {
+                string salt = "";
+                byte[] bytes = new byte[128 / 8];
+                using(var keyGenerator = RandomNumberGenerator.Create())
+                {
+                    keyGenerator.GetBytes(bytes);
+                    salt = BitConverter.ToString(bytes).Replace("-", "").ToLower();
+                }
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(user.Password + salt));
+                var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                user.Password = hash;
+                user.Salt = salt;
+            }
             _users.InsertOne(user);
             return user;
         }

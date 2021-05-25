@@ -23,12 +23,16 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Document>> Get() =>
-            _documentService.Get();
+        public ActionResult<List<Document>> Get([FromHeader]string authorization) {
+            AccountController.ValidateToken(authorization);
+            var docs = _documentService.Get();
+            return docs;
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetDocument")]
-        public ActionResult<Document> Get(string id)
+        public ActionResult<Document> Get([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var document = _documentService.Get(id);
 
             if (document == null)
@@ -40,47 +44,44 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpGet("group/{group}")]
-        public ActionResult<List<Document>> GetGroup(string group)
+        public ActionResult<List<Document>> GetGroup([FromHeader]string authorization, string group)
         {
+            AccountController.ValidateToken(authorization);
             var docs = _documentService.GetUserDoc(group);
             return docs;
         }
 
         [HttpPost]
-        public ActionResult<Document> Create(Document document)
+        public ActionResult<Document> Create([FromHeader]string authorization, Document document)
         {
+            AccountController.ValidateToken(authorization);
             _documentService.Create(document);
-
             return CreatedAtRoute("GetDocument", new { id = document.Id.ToString() }, document);
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Document documentIn)
+        public IActionResult Update([FromHeader]string authorization, string id, Document documentIn)
         {
+            AccountController.ValidateToken(authorization);
             var document = _documentService.Get(id);
-
             if (document == null)
             {
                 return NotFound();
             }
-
             _documentService.Update(id, documentIn);
-
             return NoContent();
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var document = _documentService.Get(id);
-
             if (document == null)
             {
                 return NotFound();
             }
-
             _documentService.Remove(document.Id);
-
             return NoContent();
         }
     }

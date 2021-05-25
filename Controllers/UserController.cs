@@ -17,25 +17,28 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<User>> Get() =>
-            _userService.Get();
+        public ActionResult<List<User>> Get([FromHeader]string authorization) {
+            AccountController.ValidateToken(authorization);
+            var users = _userService.Get();
+            return users;
+        }
 
         [HttpGet("{id:length(24)}", Name = "GetUser")]
-        public ActionResult<User> Get(string id)
+        public ActionResult<User> Get([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var user = _userService.Get(id);
-
             if (user == null)
             {
                 return NotFound();
             }
-
             return user;
         }
 
         [HttpGet("{login}")]
-        public ActionResult<User> GetLogin(string login)
+        public ActionResult<User> GetLogin([FromHeader]string authorization, string login)
         {
+            AccountController.ValidateToken(authorization);
             var user = _userService.Get(login);
             user.Password = null;
             if (user == null)
@@ -46,57 +49,37 @@ namespace tablinumAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<User> Create(User user)
+        public ActionResult<User> Create([FromHeader]string authorization, User user)
         {
+            AccountController.ValidateToken(authorization);
             _userService.Create(user);
-
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, User userIn)
+        public IActionResult Update([FromHeader]string authorization, string id, User userIn)
         {
+            AccountController.ValidateToken(authorization);
             var user = _userService.Get(id);
-
             if (user == null)
             {
                 return NotFound();
             }
-
             _userService.Update(id, userIn);
-
             return NoContent();
         }
 
         [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete([FromHeader]string authorization, string id)
         {
+            AccountController.ValidateToken(authorization);
             var user = _userService.Get(id);
-
             if (user == null)
             {
                 return NotFound();
             }
-
             _userService.Remove(user.Id);
-
             return NoContent();
         }
-/*
-        [Authorize]
-        [Route("getlogin")]
-        public IActionResult GetLogin()
-        {
-            return Ok($"Ваш логин: {User.Identity.Name}");
-        }
-         
-        [Authorize(Roles = "admin")]
-        [Route("getrole")]
-        public IActionResult GetRole()
-        {
-            return Ok("Ваша роль: администратор");
-        }
-*/
-
     }
 }

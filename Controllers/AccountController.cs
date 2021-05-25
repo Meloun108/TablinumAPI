@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using tablinumAPI.Models;
 using tablinumAPI.Services;
+using System.Security.Cryptography;
+using System.Text;
+using System.Security.Principal;
  
 namespace tablinumAPI.Controllers
 {
@@ -21,13 +23,19 @@ namespace tablinumAPI.Controllers
         [HttpPost("/token")]
         public IActionResult Token([FromBody]User user)
         {
+            var hash = "";
             User account = new User();
             account = _accountService.Get(user.UserLogin);
             if (account == null)
             {
                 return BadRequest(new { errorText = "Нет такого пользователя!" });
             }
-            if (account.Password != user.Password) {
+            using(var sha256 = SHA256.Create())  
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(user.Password + account.Salt));
+                hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+            if (hash != account.Password) {
                 return BadRequest(new { errorText = "Invalid username or password." });
             }
             var identity = GetIdentity(account);
@@ -113,6 +121,26 @@ namespace tablinumAPI.Controllers
                 }
             }
             return null;
+        }
+
+        public static bool ValidateToken(string authToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = GetValidationParameters();
+            SecurityToken validatedToken;
+            IPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out validatedToken);
+            return true;
+        }
+
+        public static TokenValidationParameters GetValidationParameters()
+        {
+            return new TokenValidationParameters()
+            {
+                ValidateLifetime = true,
+                ValidIssuer = AuthOptions.ISSUER,
+                ValidAudience = AuthOptions.AUDIENCE,
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey() // The same key as the one that generate the token
+            };
         }
     }
 }

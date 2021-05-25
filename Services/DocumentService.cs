@@ -3,6 +3,11 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Principal;
+using System.Text;
+using tablinumAPI.Controllers;
 
 namespace tablinumAPI.Services
 {
@@ -26,13 +31,7 @@ namespace tablinumAPI.Services
 
         public List<Document> GetUserDoc(string group) {
             var Filter = new BsonDocument("GroupInfo.Group", ObjectId.Parse(group));
-            //var Filter = Builders<BsonDocument>.Filter.Gt("GroupInfo._id", group);
             var docs = _documents.Find(Filter).ToList();
-            //var docs = _documents.Aggregate()
-                // filter the ConnectingQuestions array to only include the element with QuestionNumber == 2
-            //    .Project<Document>("{ 'GroupInfo': { $filter: { input: '$GroupInfo', cond: { $eq: [ '$$this.Group', '" + group + "' ] } } } }")
-                // move the first (single!) item from "ConnectingQuestions" array to the document root level
-            //    .ToList();
             return docs;
         }
 
