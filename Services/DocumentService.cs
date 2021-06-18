@@ -47,6 +47,46 @@ namespace tablinumAPI.Services
         public void Update(string id, Document documentIn) =>
             _documents.ReplaceOne(document => document.Id == id, documentIn);
 
+        public void UpdateLocation(string id, string[] locationsID) {
+            foreach (var loc in locationsID) {
+                var filter = Builders<Document>.Filter.Eq(x => x.Id, id) & Builders<Document>.Filter.ElemMatch(x => x.GroupInfo, 
+                                                                       Builders<DocumentGroup>.Filter.Eq(x => x.GroupId, loc));
+                var update = Builders<Document>.Update.Set(x => x.GroupInfo[-1].Location, false);
+                _documents.UpdateOneAsync(filter, update);
+            }
+        }
+
+        public void AddNewLocation(string id, DocumentGroup documentGroup) {
+            var filter = Builders<Document>.Filter.Eq(x => x.Id, id);
+            var update = Builders<Document>.Update.AddToSet(x => x.GroupInfo, documentGroup);
+            _documents.UpdateOneAsync(filter, update);
+        }
+
+        public void UpdateNumberLocation(string id, List<DocumentGroup> documentGroup) {
+            //var filter = Builders<Document>.Filter.Eq(x => x.Id, id);
+            //var update = Builders<Document>.Update.Set("GroupInfo.$[i].Group", documentGroup.GroupId );
+            //var arrayFilters = new List<ArrayFilterDefinition> { new JsonArrayFilterDefinition<DocumentGroup>("{'i.Group': 
+            //                                                     { $in: ["+string.Join(",", documentGroup.GroupId.Select(s => string.Format("\"{0}\"", s)).ToArray())+"]}}") };
+            //var updateOptions = new UpdateOptions { ArrayFilters = arrayFilters };
+            //var result = _documents.UpdateOne(filter, update, updateOptions);
+            //var filter = Builders<Document>.Filter.Eq(x => x.Id, id);
+            //var update = Builders<Document>.Update.AddToSet(x => x.GroupInfo, documentGroup);
+            //_documents.UpdateOneAsync(filter, update);
+            //var filter = Builders<Document>.Filter.Eq(x => x.Id, id) & Builders<Document>.Filter.ElemMatch(x => x.GroupInfo, 
+            //                                                           Builders<DocumentGroup>.Filter.Eq(x => x.GroupId, documentGroup.GroupId));
+            //var update = Builders<Document>.Update.Set(x => x.GroupInfo[-1].NumberGroup, documentGroup.NumberGroup);
+            //_documents.UpdateOneAsync(filter, update);
+            var filter = Builders<Document>.Filter.Eq(x => x.Id, id);
+            var update = Builders<Document>.Update.Set(x => x.GroupInfo, documentGroup);
+            _documents.UpdateOneAsync(filter, update);
+        }
+
+        public void DeleteLocation(string id, List<DocumentGroup> documentGroups) {
+            var filter = Builders<Document>.Filter.Eq(x => x.Id, id);
+               var update = Builders<Document>.Update.Set(x => x.GroupInfo, documentGroups);
+            _documents.UpdateOneAsync(filter, update);
+        }
+
         public void Remove(Document documentIn) =>
             _documents.DeleteOne(document => document.Id == documentIn.Id);
 

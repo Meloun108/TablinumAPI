@@ -72,6 +72,58 @@ namespace tablinumAPI.Controllers
             return NoContent();
         }
 
+        [HttpPut("new-location/{id:length(24)}")]
+        public IActionResult AddNewLocation([FromHeader]string authorization, string id, DocumentGroup documentGroup)
+        {
+            AccountController.ValidateToken(authorization);
+            var document = _documentService.Get(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            _documentService.AddNewLocation(id, documentGroup);
+            return NoContent();
+        }
+
+        [HttpPut("upd-number-location/{id:length(24)}")]
+        public IActionResult UpdateNumberLocation([FromHeader]string authorization, string id, List<DocumentGroup> documentGroup)
+        {
+            AccountController.ValidateToken(authorization);
+            var document = _documentService.Get(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            _documentService.UpdateNumberLocation(id, documentGroup);
+            return NoContent();
+        }
+
+        [HttpPut("del-location/{id:length(24)}")]
+        public IActionResult DeleteLocation([FromHeader]string authorization, string id, List<DocumentGroup> documentGroup)
+        {
+            AccountController.ValidateToken(authorization);
+            var document = _documentService.Get(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            _documentService.DeleteLocation(id, documentGroup);
+            return NoContent();
+        }
+
+        [HttpPut("upd-location/{id:length(24)}")]
+        public IActionResult UpdateLocation([FromHeader]string authorization, string id, string[] locID)
+        {
+            AccountController.ValidateToken(authorization);
+            var document = _documentService.Get(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            _documentService.UpdateLocation(id, locID);
+            return NoContent();
+        }
+
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete([FromHeader]string authorization, string id)
         {
