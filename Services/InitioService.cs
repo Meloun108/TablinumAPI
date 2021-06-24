@@ -29,8 +29,10 @@ namespace tablinumAPI.Services
             return initio;
         }
 
-        public void Update(string id, Initio initioIn) =>
+        public void Update(string id, Initio initioIn) {
+            initioIn.Id = id;
             _initios.ReplaceOne(initio => initio.Id == id, initioIn);
+        }
 
         public void Remove(Initio initioIn) =>
             _initios.DeleteOne(initio => initio.Id == initioIn.Id);

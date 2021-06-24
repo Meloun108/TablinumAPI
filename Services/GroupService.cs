@@ -29,8 +29,10 @@ namespace tablinumAPI.Services
             return group;
         }
 
-        public void Update(string id, Group groupIn) =>
+        public void Update(string id, Group groupIn) {
+            groupIn.Id = id;
             _groups.ReplaceOne(group => group.Id == id, groupIn);
+        }
 
         public void Remove(Group groupIn) =>
             _groups.DeleteOne(group => group.Id == groupIn.Id);
